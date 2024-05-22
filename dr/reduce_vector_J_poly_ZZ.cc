@@ -21,6 +21,15 @@ void de_Rham_local::reduce_vector_J_poly_ZZ(Vec<ZZ> &result, const Vec<int64_t> 
     map< Vec<int64_t> ,  Vec<Mat<ZZ> >, vi64less>::const_iterator it;
     it = compute_reduction_matrix_J_ZZ(v);
 
+    //cout << " This is v: " << v << endl;
+    //if (v[0] == 1 && v[1] == 1 && v[2] == 1) {
+    //    cout << "--------Reduction Matrix for " << v << "------------" << endl;
+    //    cout << it->first << endl;
+    //    cout << "---" << endl;
+    //    cout << it->second << endl;
+    //    cout << "------------------------------------------------" << endl;
+    //}
+
     Mat<ZZ> M0, M1;
     Vec<ZZ> Gin, Gout, Gout0, Gout1;
     int64_t x;
@@ -36,12 +45,17 @@ void de_Rham_local::reduce_vector_J_poly_ZZ(Vec<ZZ> &result, const Vec<int64_t> 
     Gin = G;
     for(x = iterations - 1; x != (int64_t)-1; x--)//counting on overflow
     {
+
+        // evaluate at u + xv and multiply by Gin
+        // this does not use Horner's method or anything fancy
         mul(Gout0, M0, Gin);
         mul(Gout1, M1, Gin);
         mul(Gout1,x,Gout1);
         add(Gout,Gout0,Gout1);
+
         for(i = 0; i < (int64_t) G.length(); i++)
             rem(Gin[i], Gout[i], ZZ_p::modulus() );
+        cout << "After Step " << iterations - x << ": " << Gin << endl;
     }
     result = Gin;
 }

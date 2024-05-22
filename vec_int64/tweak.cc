@@ -1,4 +1,4 @@
-// Copyright 2013-2017 Edgar Costa
+// rigid local systems and F -isocrystals
 // See LICENSE file for license details.
 
 #include <NTL/vector.h>

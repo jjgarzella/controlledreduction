@@ -109,28 +109,31 @@ void zeta_function(
         for(map< Vec<int64_t>, ZZ, vi64less>::const_iterator fit = f.begin(); fit != f.end(); ++fit)
             f_ZZp[ fit->first ] = conv<ZZ_p>(fit->second);
 
+	cout << "f: " << f << endl;
+	cout << "p: " << p << endl;
+
         if(!isSmooth(fp))
         {
             cerr << "f is not smooth!" <<endl;
             abort();
         }
-        bool is_ND = isND(fp);
-        if(!is_ND and find_better_model) {
-          Mat<zz_p> M = find_change_of_variables(fp, p*100 + 100);
-          if(!IsZero(M)) {
-            if (verbose) {
-                cout<<"Found a change of variables!"<<endl;
-            }
-            Mat<ZZ_p> M_ZZ_p = conv< Mat<ZZ_p> >(conv<Mat<ZZ> >(M));
-            f_ZZp = change_of_variables<ZZ_p>(f_ZZp, M_ZZ_p);
-            is_ND = true;
-          } else {
-            if(verbose) {
-                cout<<"Wasn't able to find a suitable change of variables to make it non degenerate!"<<endl;
-            }
-          }
+        bool is_ND = false;//isND(fp);
+        //if(!is_ND and find_better_model) {
+        //  Mat<zz_p> M = find_change_of_variables(fp, p*100 + 100);
+        //  if(!IsZero(M)) {
+        //    if (verbose) {
+        //        cout<<"Found a change of variables!"<<endl;
+        //    }
+        //    Mat<ZZ_p> M_ZZ_p = conv< Mat<ZZ_p> >(conv<Mat<ZZ> >(M));
+        //    f_ZZp = change_of_variables<ZZ_p>(f_ZZp, M_ZZ_p);
+        //    is_ND = true;
+        //  } else {
+        //    if(verbose) {
+        //        cout<<"Wasn't able to find a suitable change of variables to make it non degenerate!"<<endl;
+        //    }
+        //  }
 
-        }
+        //}
         Mat<ZZ_p> Frob;
 
         if( is_ND )

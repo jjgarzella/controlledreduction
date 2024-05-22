@@ -28,10 +28,10 @@ map< Vec<int64_t>, Vec<Mat<ZZ_p> >, vi64less>::const_iterator de_Rham_local::com
         map< Vec<int64_t>, int64_t, vi64less>* dict_G;
         map< Vec<int64_t>, int64_t, vi64less>* dict_w;
 
-
         Mat<ZZ_p>* solve_top;
         solve_top = &( ( get_solve_J( (d - 2)*(n + 1) + 1) )->second );
 
+	cout << "LINEAR ALGEBRA PROBLEM: " << solve_top << endl;
 
         list_G = &tuple_list[ d * n - n ];
         dict_G = &tuple_dict[ d * n - n ];

@@ -20,6 +20,15 @@ void de_Rham_local::reduce_vector_J_ZZ(Vec<ZZ> &result, const Vec<int64_t> u, co
         
     map< Vec<int64_t> ,  Vec<Mat<ZZ> >, vi64less>::const_iterator it;
     it = compute_reduction_matrix_J_ZZ(v);
+
+    //cout << " This is v: " << v << endl;
+    //if (v[0] == 1 && v[1] == 1 && v[2] == 1) {
+    //    cout << "--------Reduction Matrix for " << v << "------------" << endl;
+    //    cout << it->first << endl;
+    //    cout << "---" << endl;
+    //    cout << it->second << endl;
+    //    cout << "------------------------------------------------" << endl;
+    //}
     
     result = it->second[0] * G;
     for( i = 0; i <= n ; i++)
