@@ -23,5 +23,6 @@ Mat<ZZ_p>* de_Rham_local::get_final_reduction_matrix_J(int64_t k)
             compute_final_reduction_matrix_J(i);
         }
     }
+    //cout << "T matrix for real: " << (final_reduction_matrix_J_dict[k-1]) << endl;
     return &(final_reduction_matrix_J_dict[k-1]);
 }

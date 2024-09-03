@@ -7,6 +7,7 @@
 #include "solve_system.h"
 #include "conv.h"
 #include "NTL/mat_ZZ.h"
+#include <iostream>
 
 using namespace NTL;
 
@@ -334,6 +335,7 @@ void solve_system_padic_flint(Vec<int64_t> &B, Mat<ZZ_p> &U, const Mat<ZZ_p> &T,
     int64_t i, j;
     mp_limb_t modulus = conv<ulong>(ZZ_p::modulus());
 
+    //std::cout << "This is T before the computation: \n" << T << std::endl;
     nmod_mat_t T_Fp;
     nmod_mat_t U_Fp;
 
@@ -354,14 +356,21 @@ void solve_system_padic_flint(Vec<int64_t> &B, Mat<ZZ_p> &U, const Mat<ZZ_p> &T,
     conv(T_Fp, T);
     solve_system_zz_p_flint(B, U_Fp, T_Fp);
 
+    //std::cout << "SOLUTION MOD P: (FLINT)" << std::endl;
+    //nmod_mat_print_pretty(U_Fp);
+
     Blength = B.length();
    
+ //   std::cout << "This is T after the computation: \n" << T << std::endl;
     
     if((ulong) modulus == ZZ_p::modulus())
     {
         nmod_mat_t X; // X = T + J
         //Compute X
         nmod_mat_init(X, nrows, ncols + Blength, modulus);
+	//std::cout << "nrows: " << nrows
+	//	<< " ncols: " << ncols
+	//	<< " Blength: " << Blength << std::endl;
 
         for(i = 0; i < nrows; i++)
         {
@@ -374,6 +383,9 @@ void solve_system_padic_flint(Vec<int64_t> &B, Mat<ZZ_p> &U, const Mat<ZZ_p> &T,
         {
             nmod_mat_entry(X, B[i], i + ncols) = 1;
         }
+
+	//std::cout << "This is X: " << std::endl;
+	//nmod_mat_print_pretty(X);
 
         nmod_mat_t U_flint;
         nmod_mat_init(U_flint, ncols + Blength, nrows, modulus);
@@ -521,6 +533,9 @@ void solve_system_padic_NTL(Vec<int64_t> &B, Mat<ZZ_p> &U, const Mat<ZZ_p> &T, i
 
     solve_system_zz_p(B, U_Fp, T_Fp);
     Blength = B.length();
+
+    //std::cout << "SOLUTION MOD P: (NTL)" << std::endl;
+    //std::cout << U_Fp << std::endl;
 
     //Compute X
     X.SetDims(nrows, ncols + Blength );

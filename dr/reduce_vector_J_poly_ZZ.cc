@@ -55,7 +55,7 @@ void de_Rham_local::reduce_vector_J_poly_ZZ(Vec<ZZ> &result, const Vec<int64_t> 
 
         for(i = 0; i < (int64_t) G.length(); i++)
             rem(Gin[i], Gout[i], ZZ_p::modulus() );
-        cout << "After Step " << iterations - x << ": " << Gin << endl;
+        //cout << "After Step " << iterations - x << ": " << Gin << endl;
     }
     result = Gin;
 }

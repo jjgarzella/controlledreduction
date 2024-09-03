@@ -43,7 +43,7 @@ Vec<ZZ_p> hypersurface::frob_J_ZZ( const int64_t coordinate, const int64_t N,con
 
     compute_fpow(N-1);
 
-    cout << "This is Fpow: " << fpow << endl;
+    //cout << "This is Fpow: " << fpow << endl;
 
     if( loop == 0)
     {
@@ -94,11 +94,11 @@ Vec<ZZ_p> hypersurface::frob_J_ZZ( const int64_t coordinate, const int64_t N,con
                 H_temp = &H[monomial];
                 H_temp->SetLength( dict_V->size() );
 
-                cout << "FROB COMPONENTS: " << endl;
-                cout << "---Monomial: " << monomial << endl;
-                cout << "---Djm: " << Djm << endl;
-                cout << "---Recursive: " << it->second << endl;
-                cout << "---Factorial: " << fact << endl;
+                //cout << "FROB COMPONENTS: " << endl;
+                //cout << "---Monomial: " << monomial << endl;
+                //cout << "---Djm: " << Djm << endl;
+                //cout << "---Recursive: " << it->second << endl;
+                //cout << "---Factorial: " << fact << endl;
 
                 (*H_temp)[ (*dict_V)[ p * monomial - tweak( p * monomial, d * n - n) ] ] += conv<ZZ_p>(Djm * rep(it->second) * rep(fact));
                 /*
@@ -114,8 +114,9 @@ Vec<ZZ_p> hypersurface::frob_J_ZZ( const int64_t coordinate, const int64_t N,con
             }
         }
 
-        cout << "This is H: " << H << endl;
-        cout << "---Factorial: " << fact << endl;
+	//if (coordinate == 1)
+        //    cout << "This is H: " << H << endl;
+        //cout << "---Factorial: " << fact << endl;
 
         /*
          * before
@@ -138,7 +139,7 @@ Vec<ZZ_p> hypersurface::frob_J_ZZ( const int64_t coordinate, const int64_t N,con
         for( Hit = H.begin(); Hit != H.end(); Hit++)
         {
             if( verbose )
-                cout<<"\treducing "<< Hit->first <<endl;
+                //cout<<"\treducing "<< Hit->first <<endl;
 	    //cout << "This is H: " << H << endl;
 
             G = conv< Vec<ZZ> >(Hit->second);
@@ -169,20 +170,27 @@ Vec<ZZ_p> hypersurface::frob_J_ZZ( const int64_t coordinate, const int64_t N,con
                 }
             }
 
-	    cout << "Chose direction v = " << v << endl;
+            //cout << "Starting new reduction chunk" << endl;
+	    //cout << "reducing the H " << Hit->first << endl;
+	    //cout << "Chose direction v = " << v << endl;
+	    
 
             end = (e > n/p + 1) ? p : p - n%p;
             
+	    
             switch(loop) // Always 0
             {
                 case 0:
                     i = 0;
+		    //cout << "Before reduction chunk: " << G << endl;
                     if( end > d * n - n )
                     {
                         // tweak( p
+			//cout << "about to reduce_poly" << endl;
                         dest = p * (Hit->first - v) + (p - end) * v + tweak( (d*n - n) * v, (d*n - n) );
                         assert( dest ==  tweak(p * (Hit->first - v) + (p - end)*v + (d*n - n) * v , d*n - n ) );
                         // dest == tweak( p * Hit->first - (end - (d*n - n))*v, d*n -n)
+			//cout << "reducing in direction " << v << "with" << end - (d*n - n) << "iterations" << endl;
                         dR->reduce_vector_J_poly_ZZ(G, dest, v, end - (d * n - n), G);
                         i = end - (d*n - n);
                     }
@@ -191,10 +199,11 @@ Vec<ZZ_p> hypersurface::frob_J_ZZ( const int64_t coordinate, const int64_t N,con
                         src = tweak(p * Hit->first - i * v, d * n - n);
                         dest = tweak(p * Hit->first - (i + 1) * v, d * n - n);
                         y = src - dest;
+			//cout << "reducing in direction " << y << endl;
                         dR->reduce_vector_J_ZZ(Gswap, dest,  y, G);
                         for( j = 0; j < (int64_t) G.length(); j++)
                             rem(G[j], Gswap[j], ZZ_p::modulus() );
-			cout << "After Step " << i+1 << ": " << G << endl;
+//cout << "After Step " << i+1 << ": " << G << endl;
                     }
                     break;
 
@@ -223,6 +232,7 @@ Vec<ZZ_p> hypersurface::frob_J_ZZ( const int64_t coordinate, const int64_t N,con
                     }
                     break;
             }
+
                                
             G_ZZ_p = conv< Vec<ZZ_p> >(G);
             if(! IsZero(G_ZZ_p) )
@@ -244,6 +254,9 @@ Vec<ZZ_p> hypersurface::frob_J_ZZ( const int64_t coordinate, const int64_t N,con
     
                     mul(G_ZZ_p, *(dR->get_inclusion_matrix_J(dest)), G_ZZ_p);
 
+                    //cout << "Before the inclusion matrix: " << G << endl;
+                    //cout << "After inclusion matrix: " << G_ZZ_p << endl;
+
                     H_last += G_ZZ_p;
                 }
             }
@@ -253,7 +266,9 @@ Vec<ZZ_p> hypersurface::frob_J_ZZ( const int64_t coordinate, const int64_t N,con
         H.swap(Hnew);
     }
 
-    cout << "Terms after controlled reduction: " << H_last << endl;
+    cout << "(combined) Terms after controlled reduction: " << H_last << endl;
+
+    //if (coordinate == 2) assert(false);
 
     // H_last has the poles with order n
     // final reduction step for H_last
@@ -289,6 +304,7 @@ Vec<ZZ_p> hypersurface::frob_J_ZZ( const int64_t coordinate, const int64_t N,con
                 G0[ (*dict_G0)[ monomial ] ] +=  conv<ZZ_p>(Djm * rep(it->second) * rep(fact));
             }
             mul(G0, (*(dR->get_final_reduction_matrix_J(p * e))), G0);
+	    cout << "T matrix: " << (*(dR->get_final_reduction_matrix_J(p * e))) << endl;
             F += G0;
         }
         /*
@@ -304,18 +320,26 @@ Vec<ZZ_p> hypersurface::frob_J_ZZ( const int64_t coordinate, const int64_t N,con
             fact *= p*e - i - 1;
     }
 
+    cout << "e: " << e << endl;
+    cout << "F before scaling: " << F << endl;
     assert( fact == factorial<ZZ_p>( p*(m + N - 1) - 1 ) );
+    cout << "fact before taking valuation: " << fact << endl;
     val = valuation_of_factorial(p*(m + N - 1) - 1, p);
+    cout << "val: " << val << endl;
     DivRem(tmp, remainder,  factorial<ZZ>( p*(m + N - 1) - 1 ) , power_ZZ(p,val));
     assert(IsZero(remainder));
-    cout << "---Factorial: " << fact << endl;
-    cout << "---tmp: " << tmp << endl;
+    cout << "Factorial: " << fact << endl;
+    cout << "Factorial divided by powers of p: " << tmp << endl;
     inv(fact, to_ZZ_p(tmp) ); // procedural modular inverse, i.e. stores tmp^-1 to fact
-    cout << "---Factorial: " << fact << endl;
+    cout << "Factorial: " << fact << endl;
     F *= fact;
+
+    cout << "F after factorial: " << F << endl;
     
-    if( n - 1 >= val)
+    if( n - 1 >= val) {
         F *= to_ZZ_p(power_ZZ(p, n - 1 - val));
+    	cout << "F after scaling by power of p: " << F << endl;
+    }
     else
     {
         ZZ ppower = power_ZZ(p,val - ( n - 1) );
@@ -326,6 +350,7 @@ Vec<ZZ_p> hypersurface::frob_J_ZZ( const int64_t coordinate, const int64_t N,con
             assert( IsZero(remainder) );
             F[i] = to_ZZ_p(tmp);
         }
+	cout << "F after dividing by p: " << F << endl;
     }
 
     cout << "Final result of reduction: " << F << endl;

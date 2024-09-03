@@ -95,6 +95,7 @@ void zeta_function(
         cout<<"bye bye"<<endl;
         abort();
       }
+      cout << "RELATIVE PRECISIONS: " << r_vector << endl;
     }
 
     {

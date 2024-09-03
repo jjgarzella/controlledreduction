@@ -31,13 +31,20 @@ map< Vec<int64_t>, Vec<Mat<ZZ_p> >, vi64less>::const_iterator de_Rham_local::com
         Mat<ZZ_p>* solve_top;
         solve_top = &( ( get_solve_J( (d - 2)*(n + 1) + 1) )->second );
 
-	cout << "LINEAR ALGEBRA PROBLEM: " << solve_top << endl;
+	//cout << "LINEAR ALGEBRA PROBLEM: " << solve_top << endl;
 
         list_G = &tuple_list[ d * n - n ];
         dict_G = &tuple_dict[ d * n - n ];
         dict_w = &tuple_dict[ (d * n - n) + d - (n+1) ]; //deg G + sum(v) - (n+1) = (d-2)*(n+1) + 1
         list_F = &tuple_list[ d * n - 2 * n ]; //deg G + d -(n+1) - (d-1) = (d-2)*(n+1) + 1 - ( d - 1)
 
+
+	//cout << "---Translation between G vectors and monomials---" << endl;
+	//cout << "list_G: " << *list_G << endl;
+	//cout << "dict_G: " << *dict_G << endl;
+	//cout << "degree 2: " << tuple_dict[2] << endl;
+	//cout << "degree 6: " << tuple_dict[6] << endl;
+	//cout << "-------------------------------------------------" << endl;
 
         int64_t dim_Fi = list_F->length();
 

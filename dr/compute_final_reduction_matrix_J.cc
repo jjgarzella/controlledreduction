@@ -10,6 +10,8 @@
  */
 void de_Rham_local::compute_final_reduction_matrix_J(int64_t k)
 {
+    cout << "CALCULATING FINAL REDUCTION MATRIX" << endl;
+
     assert( k > 0);
     assert( k <= n );
     int64_t degree_of_G, i, j;
@@ -19,6 +21,9 @@ void de_Rham_local::compute_final_reduction_matrix_J(int64_t k)
     Mat<ZZ_p>* M;
     M = &final_reduction_matrix_J_dict[k-1];
     list_G = &tuple_list[ degree_of_G ];
+
+    //cout << "list_G: " << (*list_G) << endl;
+
     if( k == 1 )
     {
         M->SetDims( coKernels_J_basis.length() , list_G->length() );
@@ -53,6 +58,10 @@ void de_Rham_local::compute_final_reduction_matrix_J(int64_t k)
         list_H = &tuple_list[degree_of_G - d];
         dict_H = &tuple_dict[degree_of_G - d];
 
+        //cout << "list_F: " << (*list_F) << endl;
+        //cout << "list_H: " << (*list_H) << endl;
+        //cout << "dich_H: " << (*dict_H) << endl;
+
         H.SetLength(list_H->length());
 
         dim_Fi = list_F->length();
@@ -60,17 +69,22 @@ void de_Rham_local::compute_final_reduction_matrix_J(int64_t k)
         pairBU = get_solve_J(degree_of_G);
         B = &(pairBU->first);
         U = &(pairBU->second);
+        
+        //cout << "B: " << (*B) << endl;
+        //cout << "U: " << (*U) << endl;
 
         F.SetLength(U->NumRows());
 
         M_low = &final_reduction_matrix_J_dict[k-2];
 
+	//cout << "k: " << k << endl;
         // (k - 1)!
         fact = 1;
         for( i = 1 ; i < k ; i++ )
         {
             fact *= i;
         }
+	//cout << "fact: " << fact << endl;
 
         for( coordinate_of_monomial = 0; coordinate_of_monomial < (int64_t) list_G->length(); coordinate_of_monomial++)
         {
