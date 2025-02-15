@@ -113,12 +113,13 @@ void zeta_function(
 	cout << "f: " << f << endl;
 	cout << "p: " << p << endl;
 
-        if(!isSmooth(fp))
-        {
-            cerr << "f is not smooth!" <<endl;
-            abort();
-        }
+        //if(!isSmooth(fp))
+        //{
+        //    cerr << "f is not smooth!" <<endl;
+        //    abort();
+        //}
         bool is_ND = false;//isND(fp);
+        //bool is_ND = isND(fp);
         //if(!is_ND and find_better_model) {
         //  Mat<zz_p> M = find_change_of_variables(fp, p*100 + 100);
         //  if(!IsZero(M)) {
@@ -139,6 +140,8 @@ void zeta_function(
 
         if( is_ND )
         {
+
+            cout << "Using the nondegenerate algorithm!!!" << endl;
             hypersurface_non_degenerate hs_ND(p, precision, f_ZZp, verbose);
             assert(hs_ND.dR->coKernels_J_basis.length() + 1 == charpoly_prec.length() );
             Frob = hs_ND.frob_matrix_ND(N);
